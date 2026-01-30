@@ -1,4 +1,6 @@
 #include "WorldManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "../Player/MyPlayerCharacter.h"
 #include "Engine/Engine.h"
 
 
@@ -23,6 +25,7 @@ void AWorldManager::Tick(float DeltaTime)
         CurrentTime = 0.f;
         bIsNight = !bIsNight;
 
+		// Mostrar mensaje en pantalla al cambio de día a noche y viceversa.
         if (GEngine)
         {
             GEngine->AddOnScreenDebugMessage(
@@ -33,6 +36,18 @@ void AWorldManager::Tick(float DeltaTime)
             );
         }
 
+    }
+
+	// Si es de noche y no es un mapa seguro, moriste de wan.
+    if (bIsNight && !bIsSafeMap)
+    {
+        AMyPlayerCharacter* Player =
+            Cast<AMyPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+        if (Player)
+        {
+            Player->Destroy();
+        }
     }
 }
 

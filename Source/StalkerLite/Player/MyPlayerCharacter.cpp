@@ -39,6 +39,8 @@ void AMyPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
     PlayerInputComponent->BindAxis("MoveRight", this, &AMyPlayerCharacter::MoveRight);
     PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+    PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMyPlayerCharacter::Interact);
+
 }
 
 void AMyPlayerCharacter::MoveForward(float Value)
@@ -56,4 +58,39 @@ void AMyPlayerCharacter::MoveRight(float Value)
         AddMovementInput(GetActorRightVector(), Value);
     }
 }
+
+void AMyPlayerCharacter::Interact()
+{
+    FVector Start;
+    FRotator Rot;
+
+    GetController()->GetPlayerViewPoint(Start, Rot);
+
+    FVector End = Start + Rot.Vector() * 300.f;
+
+    FHitResult Hit;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
+
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        Hit,
+        Start,
+        End,
+        ECC_Visibility,
+        Params
+    );
+
+#if WITH_EDITOR
+    DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1.f);
+#endif
+
+    if (!bHit) return;
+
+    ALevelTransitionDoor* Door = Cast<ALevelTransitionDoor>(Hit.GetActor());
+    if (Door)
+    {
+        Door->Use();
+    }
+}
+
 

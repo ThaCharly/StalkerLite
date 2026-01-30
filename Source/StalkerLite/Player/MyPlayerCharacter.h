@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
+#include "../Actors/LevelTransitionDoor.h"
+#include "DrawDebugHelpers.h"
 #include "MyPlayerCharacter.generated.h"
 
 
@@ -17,6 +19,8 @@ public:
 
     void MoveForward(float Value);
     void MoveRight(float Value);
+    void Interact();
+
 
 
 protected:

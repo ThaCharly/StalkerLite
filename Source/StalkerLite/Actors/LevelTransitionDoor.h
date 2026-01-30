@@ -11,4 +11,15 @@ class STALKERLITE_API ALevelTransitionDoor : public AActor
 
 public:
     ALevelTransitionDoor();
+
+    UFUNCTION()
+    void Use();
+
+    UPROPERTY(EditAnywhere, Category = "Level")
+    FName TargetLevel;
+
+    UPROPERTY(VisibleAnywhere)
+    class USceneComponent* ExitPoint;
+
+
 };
